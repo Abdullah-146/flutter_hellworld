@@ -2,9 +2,16 @@ import "package:flutter/material.dart";
 import "package:flutter_hellworld/utils/routes.dart";
 import "package:google_fonts/google_fonts.dart";
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String name = "";
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -26,9 +33,9 @@ class LoginPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                "This is the Login Page of the App",
-                style: TextStyle(
+              Text(
+                "This is the Login Page of the $name",
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
@@ -45,6 +52,11 @@ class LoginPage extends StatelessWidget {
                         hintText: "Enter Username",
                         labelText: "Username",
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          name = value;
+                        });
+                      },
                     ),
                     TextFormField(
                       obscureText: true,
@@ -59,18 +71,51 @@ class LoginPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
-                  foregroundColor: WidgetStateProperty.all(Colors.white),
-                  // minumumSize: MaterialStateProperty.all(Size(150, 40)),
-                  minimumSize: WidgetStateProperty.all(const Size(150, 40)),
-                ),
-                onPressed: () {
+              InkWell(
+                onTap: () async {
+                  setState(() {
+                    changeButton = !changeButton;
+                  });
+                  await Future.delayed(const Duration(seconds: 1));
+                  // ignore: use_build_context_synchronously
                   Navigator.pushNamed(context, MyRoutes.homeRoute);
                 },
-                child: const Text("Login"),
-              ),
+                child: AnimatedContainer(
+                  duration: const Duration(seconds: 1),
+                  height: 50,
+                  width: changeButton ? 50 : 150,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(
+                      changeButton ? 50 : 8,
+                    ),
+                  ),
+                  child: Center(
+                    child: changeButton
+                        ? const Icon(Icons.done, color: Colors.white)
+                        : const Text(
+                            "Login",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                  ),
+                ),
+              )
+              // ElevatedButton(
+              //   style: ButtonStyle(
+              //     backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+              //     foregroundColor: WidgetStateProperty.all(Colors.white),
+              //     // minumumSize: MaterialStateProperty.all(Size(150, 40)),
+              //     minimumSize: WidgetStateProperty.all(const Size(150, 40)),
+              //   ),
+              //   onPressed: () {
+              //     Navigator.pushNamed(context, MyRoutes.homeRoute);
+              //   },
+              //   child: const Text("Login"),
+              // ),
             ],
           ),
         ));
